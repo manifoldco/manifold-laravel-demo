@@ -1,58 +1,113 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Manifold Laravel Demo App
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+This demo app shows how to plug a resrouce you have provisioned to inside your [Manifold Dashboard](https://dashboard.manifold.co) can be used easily inside your laravel app using our [manifold-laravel php package](https://packagist.org/packages/manifoldco/manifold-laravel)
 
-## About Laravel
+This app does nothing special, in fact, most of it is boilerplate and comes from [this](https://laracasts.com/series/laravel-from-scratch-2017/episodes/17) great intro laracast on Laravel Auth and Config set up, __except__ that is pulls are its configuration variables directly from your Manifold project (vs editing your .env file and keeping it up to date).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+## Steps to make this app
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Get Composer (if you don't already have)
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+Run:
+```php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php --install-dir=/usr/local/bin
+php -r "unlink('composer-setup.php');"
+```
 
-## Learning Laravel
+### Set up basic demo app
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+`mkdir demo-app`
+`composer create-project laravel/laravel demo-app`
+`cd demo-app`
+Verify its up and running:
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+`php artisan serve`
 
-## Laravel Sponsors
+You should see the boilerplate Laravel 5 home page, feel free to shut the serve down `CTL+c`
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+### Add the Manifold-laravel package:
+- Install and publish the configs
+```
+composer require manifoldco/manifold-laravel
+php artisan vendor:publish
+```
+select `manifoldco\manifold-laravel` from the vendor list
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+- Set up your API Token in your .env
 
-## Contributing
+```
+MANIFOLD_API_TOKEN=
+MANIFOLD_PROJECT_ID=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+### Setup the Login in / Auth
 
-## Security Vulnerabilities
+`php artisan make:auth`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+This adds a bunch of views, routes, etc for account creation, password resets, etc etc.
 
-## License
+Before we go and make the migrations, lets plug in a db from Manifold's marketplace, Jawsdb
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+### Steps to plug in a manifold resource
+
+*go provision a jawsdb, for example*
+
+#### Plugin Jaws
+
+Mofidy `config/manifold.php` and then alias in the mysql config needed.
+
+
+```
+<?php
+
+return [
+    'token' => env('MANIFOLD_API_TOKEN', null),
+    'resource_id' => env('MANIFOLD_RESOURCE_ID', null),
+    'project' => env('MANIFOLD_PROJECT', null),
+    'product_id' => env('MANIFOLD_PRODUCT_ID', null),
+    'aliases' => [
+        'database' => [
+            'connections' => [
+                'mysql' => [
+                    'host' => function(){
+                        $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
+                        return $url['host'];
+                    },
+                    'password' => function(){
+                        $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
+                        return $url['pass'];
+                    },
+                    'username' => function(){
+                        $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
+                        return $url['user'];
+                    },
+                    'database' => function(){
+                        $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
+                        return substr($url["path"], 1);
+                    }
+                ]
+            ]
+        ]
+    ],
+];
+
+```
+
+### Mod AppServiceProvider to work with Jawsdb
+
+In the AppServiceProvider.php,you include this code top of the file.
+
+`use Illuminate\Support\Facades\Schema;`
+
+And you add this code in boot method.
+
+`Schema::defaultStringLength(191);`
+
+### Migrate
+
+`php artisan migrate`
+
+### Turn it all on and play
+
+`php artisan serve`

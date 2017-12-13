@@ -41,6 +41,13 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+
+
+$app->configureMonologUsing(function($monolog) {
+    $handler = new \Zwijn\Monolog\Handler\LogdnaHandler(config('logdna.KEY'),config('manifold.project'),\Monolog\Logger::DEBUG);
+    $monolog->pushHandler($handler);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

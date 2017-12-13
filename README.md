@@ -166,7 +166,7 @@ return [
 
 ```
 
-Explanation: I'm using the full `project-name.resourcename.key` reference in the above code to show you it is available to you, but I could have simply done `mysql.JAWSDB_URL` to pull the full secret in.  I'm then setting up a series of alias' to set the database related configs.  And thats it!  No need to mod the `confif/database.php` file any more then simply telling it to use `mysql`.  The configs will now be used where needed and laravel will use our JawsDB instance!
+Explanation: I'm then setting up a series of alias' to set the database related configs.  And thats it!  No need to mod the `confif/database.php` file any more then simply telling it to use `mysql`.  The configs will now be used where needed and laravel will use our JawsDB instance!
 
 Oops, almost, small DB related issue, specific to JawsDB (well, mysql) and Laravel, to get it all working, do the following: 
 

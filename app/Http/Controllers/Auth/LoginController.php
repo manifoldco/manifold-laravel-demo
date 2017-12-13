@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -34,6 +35,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        Log::info('User Loging in');
         $this->middleware('guest')->except('logout');
     }
 }

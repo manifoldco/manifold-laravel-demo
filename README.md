@@ -17,6 +17,8 @@ For this demo we focus on two Providers' services available on our platform, Jaw
 
 At the end, you'll have one API key, a project name, and thats it, the rest gets pulled into your app via our package.
 
+*If you would like a longer tutorial on using this demo application, please see our blog post [here](https://blog.manifold.co/announcing-manifolds-laravel-integration-12b9b0389579).*
+
 ### Prerequisites:
 - You have a Laravel application (feel free to clone this repo and use it).
 - You have a [Manifold account](https://dashboard.manifold.co) (free!)

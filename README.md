@@ -2,7 +2,10 @@
 [Homepage](https://manifold.co) |
 [Twitter](https://twitter.com/manifoldco) |
 [Code of Conduct](./.github/CODE_OF_CONDUCT.md) |
-[Contribution Guidelines](./.github/CONTRIBUTING.md) 
+[Contribution Guidelines](./.github/CONTRIBUTING.md)
+
+[![Build Status](https://travis-ci.org/manifoldco/manifold-laravel-demo.svg?branch=master)](https://travis-ci.org/manifoldco/manifold-laravel-demo)
+[![License](https://img.shields.io/badge/license-BSD-blue.svg)](./LICENSE)
 
 ![Laravel Manifold](./banner.png)
 
@@ -15,7 +18,7 @@ For this demo we focus on two Providers' services available on our platform, Jaw
 At the end, you'll have one API key, a project name, and thats it, the rest gets pulled into your app via our package.
 
 ### Prerequisites:
-- You have a Laravel application (feel free to clone this repo and use it). 
+- You have a Laravel application (feel free to clone this repo and use it).
 - You have a [Manifold account](https://dashboard.manifold.co) (free!)
 - You are comfortable provisioning resources in Manifold and have provisioned either JawsDB or LogDNA (guide [here](https://docs.manifold.co/docs/quickstart-guide-6G2IZEjhD20oK6iISoQOE6))
 
@@ -127,7 +130,7 @@ return [
 ```
 
 
-We are setting up a series of alias' to set the database related configuration. And that's it! No need to modify the `config/database.php` file any more than simply telling it to use MySQL. 
+We are setting up a series of alias' to set the database related configuration. And that's it! No need to modify the `config/database.php` file any more than simply telling it to use MySQL.
 
 One last step to get it all working:
 

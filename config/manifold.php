@@ -9,22 +9,22 @@ return [
         'database' => [
             'connections' => [
                 'mysql' => [
-                    'host' => function(){
+                    'host' => (function(){
                         $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
-                        return $url['host'];
-                    },
-                    'password' => function(){
+                        return array_key_exists('host', $url) ? $url['host'] : null;
+                    })(),
+                    'password' => (function(){
                         $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
-                        return $url['pass'];
-                    },
-                    'username' => function(){
+                        return array_key_exists('pass', $url) ? $url['pass']: null;
+                    })(),
+                    'username' => (function(){
                         $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
-                        return $url['user'];
-                    },
-                    'database' => function(){
+                        return array_key_exists('user', $url) ? $url['user'] : null;
+                    })(),
+                    'database' => (function(){
                         $url = parse_url(config('laravel-demo-mysql.JAWSDB_URL'));
-                        return substr($url["path"], 1);
-                    }
+                        return array_key_exists('path', $url) ? substr($url["path"], 1) : null;
+                    })(),
                 ]
             ]
         ]
